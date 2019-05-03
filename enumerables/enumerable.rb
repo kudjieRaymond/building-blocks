@@ -1,11 +1,7 @@
 module Enumerable
 	
 	def my_each
-		if self.class == Hash
-			for
-		else
 		
-		end
 		for item in self
 			yield
 		end
@@ -74,6 +70,20 @@ module Enumerable
 		end
 		
 		return temp.size
+		
+	end
+
+
+	def my_map(proc=nil)
+		
+		temp = []
+		if !proc.nil?
+			self.my_each{|x| temp << proc.call}
+		else
+			self.my_each{|x| temp << yield(x)}
+		end
+
+		return temp
 		
 	end
 
