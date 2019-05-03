@@ -77,14 +77,23 @@ module Enumerable
 	def my_map(proc=nil)
 		
 		temp = []
-		if !proc.nil?
+		if proc
 			self.my_each{|x| temp << proc.call}
 		else
 			self.my_each{|x| temp << yield(x)}
 		end
 
-		return temp
+		temp
 		
+	end
+
+	def my_inject(acc)
+
+		accumulator = acc
+
+		self.my_each{|x| accumulator = yield(accumulator, x) }
+		
+		accumulator
 	end
 
 
