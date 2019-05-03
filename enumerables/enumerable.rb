@@ -34,7 +34,7 @@ module Enumerable
 	def my_all? 
 		self.my_each do |x|
 			#stop if item is flagged
-			return false if yield == false
+			return false if !yield 
 		end
 
 		true
@@ -43,11 +43,23 @@ module Enumerable
 	def my_any? 
 		self.my_each do |x|
 			#stop if any item is true
-			return true if yield == true
+			return true if yield 
 		end
 		
 		false
 	end
+
+	def my_none? 
+		self.my_each do |x|
+			#stop if any item is true
+			return false if yield
+		end
+		
+		true
+	end
+
+	
+	
 
 
 
