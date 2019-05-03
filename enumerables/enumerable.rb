@@ -31,6 +31,7 @@ module Enumerable
 		arr
 	end
 
+	#returns true if the block never returns false or nil for any element passed to it
 	def my_all? 
 		self.my_each do |x|
 			#stop if item is flagged
@@ -40,6 +41,7 @@ module Enumerable
 		true
 	end
 
+	#returns true if the block ever returns a value other than false or nil for any element passed to it
 	def my_any? 
 		self.my_each do |x|
 			#stop if any item is true
@@ -49,6 +51,7 @@ module Enumerable
 		false
 	end
 
+	#returns true if the block never returns true for any element passed to it
 	def my_none? 
 		self.my_each do |x|
 			#stop if any item is true
@@ -59,7 +62,21 @@ module Enumerable
 	end
 
 	
-	
+	def my_count(param =nil)
+		temp = []
+
+		if block_given?
+			temp = self.my_select {|x| yield(x)}
+		elsif !param.nil?
+			temp = self.my_select{|x| x==param}
+		else
+			return self.size
+		end
+		
+		return temp.size
+		
+	end
+
 
 
 
