@@ -6,19 +6,18 @@ def bubble_sort(arr)
 	while exchanges && iterations >0
 		exchanges = false
 		 #arr.length-2
-		for i in (0...iterations) do
+		(0...iterations).each do |i|
 			if arr[i]>arr[i+1]
 				exchanges = true
-				temp =arr[i]
-				arr[i] = arr[i+1]
-				arr[i+1] = temp
+				arr[i], arr[i+1] = arr[i+1], arr[i]
+
 			end
 		end
 
 		iterations -=1
 
 	end
-	puts arr.inspect
+	arr
 end
 
 
@@ -28,21 +27,19 @@ def bubble_sort_by(arr)
 	
 	while exchanges && iterations >0
 		exchanges = false
-		for i in (0...iterations) do
+		(0...iterations).each do  |i|
 			if yield(arr[i], arr[i+1]) > 0
 				exchanges = true
-				temp =arr[i]
-				arr[i] = arr[i+1]
-				arr[i+1] = temp
+				arr[i], arr[i+1] = arr[i+1], arr[i]
+				
 			end
 		end
 		iterations -=1
 	end
-	puts arr.inspect
+
+	arr
 end
 
-bubble_sort([9,8,7,6,4,3,2,1])
+puts bubble_sort([9,8,7,6,4,3,2,1]).inspect
 
-bubble_sort_by(["hi","hello","hey"]) do |left,right|
-	left.length - right.length
-end
+puts bubble_sort_by(["hi","hello","hey"]){|left,right| left.length - right.length}.inspect
