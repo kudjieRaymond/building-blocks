@@ -1,37 +1,61 @@
 module Enumerable
 	
 	def my_each
-		
-		for item in self
-			yield
+		if self.class == Array
+			for i in (0...self.length) do
+				yield(self[i])
+			end
+		elsif self.class == Hash
+			for i in (0...self.keys.length) do
+				yield(self.keys[i], self.values[i])
+			end
 		end
 	end
 
 	def my_each_with_index
-		index = 0
-
-		for item in self
-			yield(item, index)
-			index+=1
+		if self.class == Array
+			for i in (0..self.length) do
+			  yield(self[i], i)
+			end
+		elsif self.class == Hash
+			for i in (0...self.keys.length) do
+			  yield(self.keys[i], self.values[i], i)
+			end
 		end
 	end
 
 	def my_select 
 
-		self.class == Array ? arr =[] : arr={}
-
-		self.my_each do |x|
-			arr << x if yield(x)
+		if self.class == Array
+			temp=[]
+			self.my_each do |x|
+				temp << x if yield(x)	
+			end
+			temp
+		elsif self.class == Hash
+			temp={}
+			self.my_each do |key, value|
+				if yield(key, value)
+				  temp[key] = value
+				end
+			end
+			temp
 		end
 
-		arr
 	end
 
 	#returns true if the block never returns false or nil for any element passed to it
 	def my_all? 
-		self.my_each do |x|
-			#stop if item is flagged
-			return false if !yield 
+
+		if self.class == Array
+			self.my_each do |value|
+				#stop if item is flagged
+				return false if !yield(value)
+			end
+		elsif self.class == Hash
+			self.my_each do |key, value|
+				return false if !yield(key, value)
+			end
 		end
 
 		true
@@ -39,9 +63,16 @@ module Enumerable
 
 	#returns true if the block ever returns a value other than false or nil for any element passed to it
 	def my_any? 
-		self.my_each do |x|
+		if self.class == Array
+			self.my_each do |key|
+				#stop if any item is true
+				return true if yield(key) 
+			end
+		elsif self.class == Hash
+			self.my_each do |key, value|
 			#stop if any item is true
-			return true if yield 
+				return true if yield(key, value)
+			end
 		end
 		
 		false
@@ -49,9 +80,17 @@ module Enumerable
 
 	#returns true if the block never returns true for any element passed to it
 	def my_none? 
-		self.my_each do |x|
-			#stop if any item is true
-			return false if yield
+		if self.class == Array
+			self.my_each do |value|
+				#stop if any item is true
+				return false if yield(value)
+			end
+
+		elsif self.class == Hash
+			self.my_each do |key , value|
+				#stop if any item is true
+				return false if yield(key, value)
+			end
 		end
 		
 		true
@@ -60,15 +99,25 @@ module Enumerable
 	
 	def my_count(param =nil)
 		temp = []
-
-		if block_given?
-			temp = self.my_select {|x| yield(x)}
-		elsif !param.nil?
-			temp = self.my_select{|x| x==param}
-		else
-			return self.size
+		if self.class == Hash
+			if block_given?
+				temp = self.my_select {|value| yield(value)}
+			elsif !param.nil?
+				temp = self.my_select{|value| value==param}
+			else
+				return self.size
+			end
+			
+		elsif self.class == Hash
+			if block_given?
+				temp = self.my_select {|key,value| yield(key,value)}
+			elsif !param.nil?
+				temp = self.my_select{|key,value| value==param}
+			else
+				return self.size
+			end
 		end
-		
+
 		return temp.size
 		
 	end
@@ -76,14 +125,30 @@ module Enumerable
 
 	def my_map(proc=nil)
 		
-		temp = []
-		if proc
-			self.my_each{|x| temp << proc.call}
-		else
-			self.my_each{|x| temp << yield(x)}
-		end
+		if self.class == Array
 
-		temp
+			temp = []
+
+			if proc.is_a? Proc
+				self.my_each{|value| temp << proc.call(value)}
+			else
+				self.my_each{|value| temp << yield(x)}
+			end
+
+			temp
+
+		elsif self.class == Hash
+
+			temp = {}
+
+			if proc.is_a? Proc
+				self.my_each{|key, value| temp[key] =  proc.call(key,value)}
+			else
+				self.my_each{|key, value| temp[key] = yield(key, value)}
+			end
+
+			temp
+		end
 		
 	end
 
@@ -91,8 +156,16 @@ module Enumerable
 
 		accumulator = acc
 
-		self.my_each{|x| accumulator = yield(accumulator, x) }
-		
+		if self.class == Array
+
+			self.my_each{|value| accumulator = yield(accumulator, value) }
+
+		elsif self.class == Hash
+
+			self.my_each{|key,value| accumulator = yield(accumulator, value) }
+			
+		end
+
 		accumulator
 	end
 
@@ -100,3 +173,17 @@ module Enumerable
 
 
 end
+
+arr = ['a','b','c','c','d']
+arrnum = [1,2,3,4,5,6]
+hash = {a:1,b:2,c:3,d:4}
+
+ #arr.each {|x| puts x}
+ #arr.my_each {|x| puts x}
+ #hash.my_each {|x,y| puts x.to_s+y.to_s}
+ puts arr.count
+ puts arr.count('c')
+ puts arr.count {|x| x<'c'}
+ puts arr.my_count
+ puts arr.my_count('c')
+ puts arr.my_count {|x| x<'c'}
