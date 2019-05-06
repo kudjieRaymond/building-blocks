@@ -99,7 +99,8 @@ module Enumerable
 	
 	def my_count(param =nil)
 		temp = []
-		if self.class == Hash
+		if self.class == Array
+			
 			if block_given?
 				temp = self.my_select {|value| yield(value)}
 			elsif !param.nil?
@@ -132,7 +133,7 @@ module Enumerable
 			if proc.is_a? Proc
 				self.my_each{|value| temp << proc.call(value)}
 			else
-				self.my_each{|value| temp << yield(x)}
+				self.my_each{|value| temp << yield(value)}
 			end
 
 			temp
@@ -152,7 +153,7 @@ module Enumerable
 		
 	end
 
-	def my_inject(acc)
+	def my_inject(acc=0)
 
 		accumulator = acc
 
@@ -168,22 +169,13 @@ module Enumerable
 
 		accumulator
 	end
-
-
-
-
 end
 
-arr = ['a','b','c','c','d']
-arrnum = [1,2,3,4,5,6]
-hash = {a:1,b:2,c:3,d:4}
+def multiply_els(arr)
+	puts arr.my_inject(1) {|tot,n| tot * n}
+end
+multiply_els([2,4,5])
 
- #arr.each {|x| puts x}
- #arr.my_each {|x| puts x}
- #hash.my_each {|x,y| puts x.to_s+y.to_s}
- puts arr.count
- puts arr.count('c')
- puts arr.count {|x| x<'c'}
- puts arr.my_count
- puts arr.my_count('c')
- puts arr.my_count {|x| x<'c'}
+ 
+
+
