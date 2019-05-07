@@ -46,7 +46,6 @@ module Enumerable
 
 	#returns true if the block never returns false or nil for any element passed to it
 	def my_all? 
-
 		if self.class == Array
 			self.my_each do |value|
 				#stop if item is flagged
@@ -57,7 +56,6 @@ module Enumerable
 				return false if !yield(key, value)
 			end
 		end
-
 		true
 	end
 
@@ -70,11 +68,10 @@ module Enumerable
 			end
 		elsif self.class == Hash
 			self.my_each do |key, value|
-			#stop if any item is true
+			  #stop if any item is true
 				return true if yield(key, value)
 			end
 		end
-		
 		false
 	end
 
@@ -85,7 +82,6 @@ module Enumerable
 				#stop if any item is true
 				return false if yield(value)
 			end
-
 		elsif self.class == Hash
 			self.my_each do |key , value|
 				#stop if any item is true
@@ -100,20 +96,18 @@ module Enumerable
 	def my_count(param =nil)
 		temp = []
 		if self.class == Array
-			
 			if block_given?
 				temp = self.my_select {|value| yield(value)}
 			elsif !param.nil?
-				temp = self.my_select{|value| value==param}
+				temp = self.my_select {|value| value==param}
 			else
 				return self.size
 			end
-			
 		elsif self.class == Hash
 			if block_given?
 				temp = self.my_select {|key,value| yield(key,value)}
 			elsif !param.nil?
-				temp = self.my_select{|key,value| value==param}
+				temp = self.my_select {|key,value| value==param}
 			else
 				return self.size
 			end
@@ -125,48 +119,34 @@ module Enumerable
 
 
 	def my_map(proc=nil)
-		
 		if self.class == Array
-
 			temp = []
-
 			if proc.is_a? Proc
-				self.my_each{|value| temp << proc.call(value)}
+				self.my_each {|value| temp << proc.call(value)}
 			else
-				self.my_each{|value| temp << yield(value)}
+				self.my_each {|value| temp << yield(value)}
 			end
-
 			temp
-
 		elsif self.class == Hash
-
 			temp = {}
-
 			if proc.is_a? Proc
-				self.my_each{|key, value| temp[key] =  proc.call(key,value)}
+				self.my_each {|key, value| temp[key] =  proc.call(key,value)}
 			else
-				self.my_each{|key, value| temp[key] = yield(key, value)}
+				self.my_each {|key, value| temp[key] = yield(key, value)}
 			end
-
 			temp
 		end
 		
 	end
 
 	def my_inject(acc=0)
-
-		accumulator = acc
-
+    accumulator = acc
+    
 		if self.class == Array
-
 			self.my_each{|value| accumulator = yield(accumulator, value) }
-
 		elsif self.class == Hash
-
 			self.my_each{|key,value| accumulator = yield(accumulator, value) }
-			
 		end
-
 		accumulator
 	end
 end
@@ -177,5 +157,6 @@ end
 multiply_els([2,4,5])
 
  
+
 
 
