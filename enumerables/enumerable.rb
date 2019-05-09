@@ -145,25 +145,3 @@ end
 def multiply_els(arr)
   puts arr.my_inject(1) { |tot, n| tot * n }
 end
-multiply_els([2, 4, 5])
-
-# arr = [1, 2, 3, 4, 5, 6]
-
-# puts arr.all? {|x| x> 10}
-# puts arr.my_all? {|x| x>10}
-
-# puts arr.any? {|x| x> 10}
-# puts arr.my_any? {|x| x>10}
-
-# puts arr.count
-# puts arr.count(2)
-# puts arr.count {|x| x<5}
-# puts arr.my_count
-# puts arr.my_count(2)
-# puts arr.my_count {|x| x<5}
-
-# puts arr.map {|x| x*2}
-# puts arr.my_map {|x| x*2}
-
-# puts [1, 2, 3, 4, 5].each { |i| i }
-# puts [1, 2, 3, 4, 5].my_each { |i| i }
